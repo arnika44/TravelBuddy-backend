@@ -1,0 +1,128 @@
+/* --- HUMAN-CONNECTION PREMIUM TRAVEL THEME --- */
+:root {
+  --bg-dark-overlay: rgba(10, 15, 26, 0.78); /* Soft dark layer that makes text very readable */
+  --bg-card: rgba(15, 23, 42, 0.7);
+  --border-color: rgba(255, 255, 255, 0.12);
+  --accent-neon: #00f2fe;
+  --accent-pink: #4facfe;
+  --text-white: #f8fafc;
+}
+
+body {
+  margin: 0;
+  font-family: 'Poppins', sans-serif;
+  color: var(--text-white);
+  min-height: 100vh;
+  background-color: #080c14;
+}
+
+.app-wrapper {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  transition: background-image 0.4s ease-in-out;
+}
+
+/* 🤝 REGISTER & OTP SCREEN: Beautiful Partnership/Handshake Vibe in Mountains */
+.bg-screen-register, .bg-screen-otp {
+  background-image: 
+    linear-gradient(180deg, var(--bg-dark-overlay) 0%, rgba(8, 12, 20, 0.9) 100%),
+    url('https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=1200&q=80');
+}
+
+/* 🫂 LOGIN SCREEN: Deep Human Bond / Traveling Friends hugging by a river/valley */
+.bg-screen-login {
+  background-image: 
+    linear-gradient(180deg, var(--bg-dark-overlay) 0%, rgba(8, 12, 20, 0.9) 100%),
+    url('https://images.unsplash.com/photo-1501555088652-021faa106b9b?auto=format&fit=crop&w=1200&q=80');
+}
+
+/* 🧭 DASHBOARD SCREEN: Serene River, Mountains & Road Connection Vibe */
+.bg-screen-dashboard {
+  background-image: 
+    radial-gradient(circle at 80% 20%, rgba(0, 242, 254, 0.08) 0%, transparent 50%),
+    linear-gradient(180deg, rgba(8, 12, 20, 0.82) 0%, #080c14 100%),
+    url('https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?auto=format&fit=crop&w=1200&q=80');
+}
+
+/* 🏔️ MATCHES SCREEN: Group of partners exploring beautiful rivers/nature together */
+.bg-screen-matches {
+  background-image: 
+    radial-gradient(circle at 20% 80%, rgba(79, 172, 254, 0.08) 0%, transparent 50%),
+    linear-gradient(180deg, rgba(8, 12, 20, 0.82) 0%, #080c14 100%),
+    url('https://images.unsplash.com/photo-1527631746610-bca00a040d60?auto=format&fit=crop&w=1200&q=80');
+}
+
+/* NAVBAR */
+.navbar {
+  display: flex;
+  align-items: center;
+  background: rgba(8, 12, 20, 0.85);
+  backdrop-filter: blur(15px);
+  border-bottom: 1px solid var(--border-color);
+  padding: 15px 25px;
+}
+.menu-toggle-btn { background: none; border: none; color: var(--accent-neon); font-size: 26px; cursor: pointer; margin-right: 15px; }
+.nav-title { margin: 0; font-size: 18px; font-weight: 700; background: linear-gradient(to right, var(--accent-neon), var(--accent-pink)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+
+/* LAYOUTS */
+.side-menu {
+  position: fixed; top: 0; left: -310px; width: 290px; height: 100%;
+  background: #090e1a; border-right: 1px solid var(--border-color);
+  box-shadow: 10px 0 30px rgba(0,0,0,0.6); transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: 200; padding: 20px; display: flex; flex-direction: column;
+}
+.side-menu.open { left: 0; }
+.menu-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color); padding-bottom: 10px; }
+.close-menu-btn { background: none; border: none; color: #ef4444; font-size: 22px; cursor: pointer; }
+.menu-profile-card { background: rgba(255,255,255,0.03); padding: 12px; border-radius: 8px; margin-top: 15px; border: 1px solid var(--border-color); }
+.locked-history-list { display: flex; flex-direction: column; gap: 10px; margin-top: 12px; max-height: 300px; overflow-y: auto; }
+.history-log-item { background: rgba(0,0,0,0.3); padding: 10px; border-radius: 6px; border-left: 3px solid var(--accent-neon); display: flex; flex-direction: column; }
+.menu-logout-btn { margin-top: auto; background: #ef4444; color: white; border: none; padding: 12px; cursor: pointer; border-radius: 6px; font-weight: bold; }
+
+.main-content-area { display: flex; justify-content: center; align-items: center; padding: 40px 15px; z-index: 10; flex: 1; }
+.auth-card, .page-card {
+  background: var(--bg-card); backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px);
+  border: 1px solid var(--border-color); padding: 35px; border-radius: 16px;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4); width: 100%; max-width: 440px; box-sizing: border-box;
+}
+.page-card { max-width: 680px; }
+
+.auth-card h2, .page-card h3 {
+  margin-top: 0; text-align: center; font-size: 24px;
+  background: linear-gradient(to right, #00f2fe, #4facfe);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+}
+.input-group { display: flex; flex-direction: column; margin-bottom: 16px; }
+.input-group label { font-size: 13px; color: #cbd5e1; margin-bottom: 5px; }
+.input-group input, .input-group select { padding: 12px; background: rgba(8, 12, 20, 0.75); border: 1px solid var(--border-color); border-radius: 8px; color: white; outline: none; }
+.input-group input:focus { border-color: var(--accent-neon); }
+
+.privacy-checkbox-wrapper { display: flex; align-items: center; gap: 10px; background: rgba(245, 158, 11, 0.1); border: 1px solid rgba(245, 158, 11, 0.2); padding: 12px; border-radius: 8px; margin-bottom: 15px; }
+.privacy-checkbox-wrapper label { font-size: 13px; color: #fef08a; cursor: pointer; }
+
+.auth-btn, .primary-action-btn { width: 100%; padding: 14px; border: none; border-radius: 8px; font-size: 15px; font-weight: 600; cursor: pointer; color: white; }
+.auth-btn { background: linear-gradient(to right, #4facfe, #00f2fe); }
+.primary-action-btn { background: linear-gradient(to right, #10b981, #059669); }
+.back-btn { background: rgba(255,255,255,0.1); color: white; border: 1px solid var(--border-color); padding: 8px 12px; border-radius: 6px; cursor: pointer; }
+
+.partner-card { background: rgba(255, 255, 255, 0.03); border: 1px solid var(--border-color); padding: 20px; border-radius: 12px; margin-bottom: 15px; }
+.connected-border { border-color: #10b981; background: rgba(16, 185, 129, 0.05); }
+.partner-card-header { display: flex; justify-content: space-between; align-items: center; }
+.badge { background: rgba(0, 242, 254, 0.15); color: #00f2fe; padding: 4px 10px; font-size: 12px; border-radius: 6px; }
+.card-actions { display: flex; gap: 8px; }
+.connect-btn { background: #2563eb; color: white; border: none; padding: 8px 14px; border-radius: 6px; cursor: pointer; }
+.chat-btn { background: #eab308; color: black; border: none; padding: 8px 14px; border-radius: 6px; font-weight: bold; cursor: pointer; }
+
+/* CHAT */
+.chat-popup { position: fixed; bottom: 20px; right: 20px; width: 290px; background: #1f2937; border: 1px solid var(--border-color); border-radius: 12px; overflow: hidden; }
+.chat-popup-header { background: #111827; color: white; padding: 12px; display: flex; justify-content: space-between; font-weight: bold; }
+.chat-messages { height: 130px; padding: 12px; background: #111827; font-size: 12px; }
+.chat-input-bar { display: flex; border-top: 1px solid var(--border-color); }
+.chat-input-bar input { flex: 1; border: none; padding: 12px; background: transparent; color: white; outline: none; }
+.chat-input-bar button { background: var(--accent-neon); color: black; border: none; padding: 0 15px; font-weight: bold; }
+.link-text { color: var(--accent-neon); cursor: pointer; text-align: center; margin-top: 15px; font-size: 14px; }
+.otp-box { text-align: center; font-size: 24px; letter-spacing: 8px; background: rgba(0,0,0,0.4) !important; color: var(--accent-neon) !important; }
