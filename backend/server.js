@@ -50,6 +50,33 @@ const userSchema = new mongoose.Schema({
 });
 
 const User = mongoose.model("User", userSchema);
+const profileSchema = new mongoose.Schema({
+
+  fullName: String,
+
+  age: Number,
+
+  gender: String,
+
+  budget: Number,
+
+  destination: String,
+
+  days: Number,
+
+  stay: String,
+
+  travelWith: String,
+
+  preferredGender: String,
+
+  profilePhoto: String,
+
+  idProof: String
+
+});
+
+const Profile = mongoose.model("Profile", profileSchema);
 
 // ===================== OTP STORE =====================
 const otpStore = {};
@@ -266,6 +293,29 @@ app.post("/login", async (req, res) => {
   } catch (err) {
     res.status(500).json({ message: "Login Failed" });
   }
+});
+app.post("/save-profile", async (req, res) => {
+
+  try {
+
+    const profile = new Profile(req.body);
+
+    await profile.save();
+
+    res.json({
+      message: "Profile Saved Successfully"
+    });
+
+  } catch (err) {
+
+    console.log(err);
+
+    res.status(500).json({
+      message: "Profile Save Failed"
+    });
+
+  }
+
 });
 
 // ===================== SERVER =====================
