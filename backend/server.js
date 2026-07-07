@@ -187,12 +187,28 @@ app.post("/reset-password", async (req, res) => {
 // ===================== REGISTER =====================
 app.post("/register", async (req, res) => {
   try {
+    console.log("Register Request:", req.body);
+
     const { name, email, phone, password } = req.body;
 
-    const existing = await User.findOne({ phone });
+    if (!name || !email || !phone || !password) {
+      return res.status(400).json({
+        message: "All fields are required"
+      });
+    }
 
-    if (existing) {
-      return res.status(400).json({ message: "User already exists" });
+    const existingPhone = await User.findOne({ phone });
+    if (existingPhone) {
+      return res.status(400).json({
+        message: "Phone already registered"
+      });
+    }
+
+    const existingEmail = await User.findOne({ email });
+    if (existingEmail) {
+      return res.status(400).json({
+        message: "Email already registered"
+      });
     }
 
     const hashed = await bcrypt.hash(password, 10);
@@ -207,10 +223,17 @@ app.post("/register", async (req, res) => {
 
     await newUser.save();
 
-    res.status(201).json({ message: "Registered Successfully" });
+    return res.status(201).json({
+      message: "Registered Successfully"
+    });
 
   } catch (err) {
-    res.status(500).json({ message: "Register Failed" });
+    console.error("REGISTER ERROR:", err);
+
+    return res.status(500).json({
+      message: "Register Failed",
+      error: err.message
+    });
   }
 });
 
