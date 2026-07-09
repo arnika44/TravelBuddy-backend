@@ -54,6 +54,8 @@ const profileSchema = new mongoose.Schema({
 
   fullName: String,
 
+  userPhone: String,
+
   age: Number,
 
   gender: String,
@@ -346,11 +348,13 @@ app.get("/get-profile/:fullName", async (req, res) => {
 
 });
 // ===================== GET HISTORY =====================
-app.get("/history", async (req, res) => {
+app.get("/history/:phone", async (req, res) => {
 
   try {
 
-    const profiles = await Profile.find();
+    const profiles = await Profile.find({
+      userPhone: req.params.phone
+    });
 
     res.json(profiles);
 
