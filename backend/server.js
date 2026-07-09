@@ -317,7 +317,54 @@ app.post("/save-profile", async (req, res) => {
   }
 
 });
+// ===================== GET PROFILE =====================
+app.get("/get-profile/:fullName", async (req, res) => {
 
+  try {
+
+    const profile = await Profile.findOne({
+      fullName: req.params.fullName
+    });
+
+    if (!profile) {
+      return res.status(404).json({
+        message: "Profile not found"
+      });
+    }
+
+    res.json(profile);
+
+  } catch (err) {
+
+    console.log(err);
+
+    res.status(500).json({
+      message: "Error fetching profile"
+    });
+
+  }
+
+});
+// ===================== GET HISTORY =====================
+app.get("/history", async (req, res) => {
+
+  try {
+
+    const profiles = await Profile.find();
+
+    res.json(profiles);
+
+  } catch (err) {
+
+    console.log(err);
+
+    res.status(500).json({
+      message: "History fetch failed"
+    });
+
+  }
+
+});
 // ===================== SERVER =====================
 const PORT = process.env.PORT || 5000;
 
