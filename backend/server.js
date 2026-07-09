@@ -365,6 +365,31 @@ app.get("/history", async (req, res) => {
   }
 
 });
+// ===================== FIND PARTNERS =====================
+app.get("/find-partners/:gender/:destination", async (req, res) => {
+
+  try {
+
+    const { gender, destination } = req.params;
+
+    const partners = await Profile.find({
+      preferredGender: gender,
+      destination: destination
+    });
+
+    res.json(partners);
+
+  } catch (err) {
+
+    console.log(err);
+
+    res.status(500).json({
+      message: "Partner search failed"
+    });
+
+  }
+
+});
 // ===================== SERVER =====================
 const PORT = process.env.PORT || 5000;
 
