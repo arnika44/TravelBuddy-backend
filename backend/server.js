@@ -375,7 +375,10 @@ app.get("/find-partners/:gender/:destination", async (req, res) => {
   try {
 
     const { gender, destination } = req.params;
-
+    
+    const allProfiles = await Profile.find();
+    console.log("ALL PROFILES:", allProfiles);
+    
     const partners = await Profile.find({
       preferredGender: gender,
       destination: destination
