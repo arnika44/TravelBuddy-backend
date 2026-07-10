@@ -300,12 +300,23 @@ app.post("/save-profile", async (req, res) => {
 
   try {
 
-    const profile = new Profile(req.body);
+    const data = {
+      ...req.body,
+      destination: req.body.destination.trim().toLowerCase()
+    };
 
-    await profile.save();
+    const profile = await Profile.findOneAndUpdate(
+      { userPhone: data.userPhone },   // same phone = same user
+      data,
+      {
+        new: true,
+        upsert: true
+      }
+    );
 
     res.json({
-      message: "Profile Saved Successfully"
+      message: "Profile Saved Successfully",
+      profile
     });
 
   } catch (err) {
@@ -378,7 +389,7 @@ app.get("/find-partners/:gender/:destination", async (req, res) => {
     
     const allProfiles = await Profile.find();
     console.log("ALL PROFILES:", allProfiles);
-    
+
     const partners = await Profile.find({
       preferredGender: gender,
       destination: destination
