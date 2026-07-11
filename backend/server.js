@@ -331,12 +331,12 @@ app.post("/save-profile", async (req, res) => {
 
 });
 // ===================== GET PROFILE =====================
-app.get("/get-profile/:fullName", async (req, res) => {
+app.get("/get-profile/:phone", async (req, res) => {
 
   try {
 
     const profile = await Profile.findOne({
-      fullName: req.params.fullName
+      userPhone: req.params.phone
     });
 
     if (!profile) {
