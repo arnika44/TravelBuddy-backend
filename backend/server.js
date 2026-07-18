@@ -3,6 +3,9 @@ const mongoose = require("mongoose");
 const bcrypt = require("bcryptjs");
 const cors = require("cors");
 const dns = require("dns");
+const multer = require("multer");
+const path = require("path");
+const fs = require("fs");
 
 dns.setServers(["8.8.8.8", "8.8.4.4"]);
 
@@ -15,6 +18,25 @@ app.use(cors({
 }));
 
 app.use(express.json());
+// ===================== FILE UPLOAD =====================
+
+if (!fs.existsSync("./uploads")) {
+  fs.mkdirSync("./uploads");
+}
+
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, "uploads/");
+  },
+
+  filename: function (req, file, cb) {
+    cb(null, Date.now() + "-" + file.originalname);
+  }
+});
+
+const upload = multer({ storage });
+
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 // ===================== MONGO =====================
 const dbURI = "mongodb+srv://arnika0044:Arnika213544@travelbuddydb.ial03ju.mongodb.net/?appName=TravelBuddyDB";
@@ -406,6 +428,22 @@ app.get("/find-partners/:gender/:destination", async (req, res) => {
     });
 
   }
+
+});
+// ===================== UPLOAD PROFILE PHOTO =====================
+
+app.post("/upload-profile-photo", upload.single("photo"), (req, res) => {
+
+  if (!req.file) {
+    return res.status(400).json({
+      message: "No file uploaded"
+    });
+  }
+
+  res.json({
+    message: "Photo uploaded successfully",
+    imageUrl: `/uploads/${req.file.filename}`
+  });
 
 });
 // ===================== SERVER =====================
