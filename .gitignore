@@ -17,3 +17,6 @@ frontend/dist
 
 # Zip files
 *.zip
+
+# Ignore old frontend folder
+frontend/
