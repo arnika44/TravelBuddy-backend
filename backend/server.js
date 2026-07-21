@@ -6,6 +6,7 @@ const dns = require("dns");
 const multer = require("multer");
 const path = require("path");
 const fs = require("fs");
+const Request = require("./models/Request");
 
 dns.setServers(["8.8.8.8", "8.8.4.4"]);
 
@@ -235,7 +236,7 @@ app.post("/reset-password", async (req, res) => {
   }
 });
 
-// ===================== REGISTER =====================
+//====================Register====================//
 app.post("/register", async (req, res) => {
   try {
     console.log("Register Request:", req.body);
@@ -288,7 +289,7 @@ app.post("/register", async (req, res) => {
   }
 });
 
-// ===================== LOGIN =====================
+//====================Login====================//
 app.post("/login", async (req, res) => {
   try {
     const { phone, password } = req.body;
@@ -318,6 +319,8 @@ app.post("/login", async (req, res) => {
     res.status(500).json({ message: "Login Failed" });
   }
 });
+
+//====================Save profile====================//
 app.post("/save-profile", async (req, res) => {
 
   try {
@@ -347,6 +350,47 @@ app.post("/save-profile", async (req, res) => {
 
     res.status(500).json({
       message: "Profile Save Failed"
+    });
+
+  }
+
+});
+
+//====================Send request====================//
+app.post("/send-request", async (req, res) => {
+
+  try {
+
+    const { senderPhone, receiverPhone } = req.body;
+
+    const alreadySent = await Request.findOne({
+      senderPhone,
+      receiverPhone
+    });
+
+    if (alreadySent) {
+      return res.json({
+        message: "Request already sent"
+      });
+    }
+
+    const request = new Request({
+      senderPhone,
+      receiverPhone
+    });
+
+    await request.save();
+
+    res.json({
+      message: "Request sent successfully"
+    });
+
+  } catch (err) {
+
+    console.log(err);
+
+    res.status(500).json({
+      message: "Failed to send request"
     });
 
   }
@@ -485,7 +529,9 @@ app.post("/upload-profile-photo", upload.single("photo"), (req, res) => {
 });
 // ===================== SERVER =====================
 const PORT = process.env.PORT || 5000;
-
+app.get("/test-route", (req, res) => {
+  res.send("TEST OK");
+});
 app.listen(PORT, () => {
   console.log("🚀 Server running on port", PORT);
 });                                                                    
