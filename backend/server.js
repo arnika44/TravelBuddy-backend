@@ -487,7 +487,8 @@ app.get("/history/:phone", async (req, res) => {
 
 });
 // ===================== FIND PARTNERS =====================
-app.get("/find-partners/:phone", async (req, res) => {
+
+     app.get("/find-partners/:phone", async (req, res) => {
 
   try {
 
@@ -502,17 +503,17 @@ app.get("/find-partners/:phone", async (req, res) => {
     }
 
     const partners = await Profile.find({
-      userPhone: { $ne: myProfile.userPhone }, // khud ko exclude
+      userPhone: { $ne: myProfile.userPhone },
       destination: myProfile.destination,
       travelWith: "Solo"
     });
 
-    const matchedPartners = partners.filter((p) => {
+    let finalPartners = [];
 
-      // Dono solo hone chahiye
-      if (myProfile.travelWith !== "Solo") return false;
+    for (const p of partners) {
 
-      // Mutual gender preference
+      if (myProfile.travelWith !== "Solo") continue;
+
       const myChoice =
         myProfile.preferredGender === "Any" ||
         myProfile.preferredGender === p.gender;
@@ -521,24 +522,61 @@ app.get("/find-partners/:phone", async (req, res) => {
         p.preferredGender === "Any" ||
         p.preferredGender === myProfile.gender;
 
-      // Budget difference <= 5000
       const budgetMatch =
         Math.abs(myProfile.budget - p.budget) <= 5000;
 
-      // Days difference <= 2
       const daysMatch =
         Math.abs(myProfile.days - p.days) <= 2;
 
-      return (
+      if (
         myChoice &&
         partnerChoice &&
         budgetMatch &&
         daysMatch
-      );
+      ) {
 
-    });
+        let requestStatus = "none";
 
-    res.json(matchedPartners);
+        const sent = await Request.findOne({
+          senderPhone: myProfile.userPhone,
+          receiverPhone: p.userPhone
+        });
+
+        const received = await Request.findOne({
+          senderPhone: p.userPhone,
+          receiverPhone: myProfile.userPhone
+        });
+
+        if (sent) {
+
+          if (sent.status === "Pending")
+            requestStatus = "sent";
+
+          if (sent.status === "Accepted")
+            requestStatus = "matched";
+
+        }
+
+        if (received) {
+
+          if (received.status === "Pending")
+            requestStatus = "received";
+
+          if (received.status === "Accepted")
+            requestStatus = "matched";
+
+        }
+
+        finalPartners.push({
+          ...p.toObject(),
+          requestStatus
+        });
+
+      }
+
+    }
+
+    res.json(finalPartners);
 
   } catch (err) {
 
