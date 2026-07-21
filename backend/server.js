@@ -479,7 +479,7 @@ app.post("/upload-profile-photo", upload.single("photo"), (req, res) => {
 
   res.json({
     message: "Photo uploaded successfully",
-    imageUrl: `/uploads/${req.file.filename}`
+    imageUrl: `${req.protocol}://${req.get("host")}/uploads/${req.file.filename}`
   });
 
 });
