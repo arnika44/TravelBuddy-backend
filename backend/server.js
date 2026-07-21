@@ -396,6 +396,30 @@ app.post("/send-request", async (req, res) => {
   }
 
 });
+
+//==================== GET RECEIVED REQUESTS ====================//
+
+app.get("/received-requests/:phone", async (req, res) => {
+
+  try {
+
+    const requests = await Request.find({
+      receiverPhone: req.params.phone
+    });
+
+    res.json(requests);
+
+  } catch (err) {
+
+    console.log(err);
+
+    res.status(500).json({
+      message: "Failed to fetch requests"
+    });
+
+  }
+
+});
 // ===================== GET PROFILE =====================
 app.get("/get-profile/:phone", async (req, res) => {
 
