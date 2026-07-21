@@ -8,6 +8,7 @@ const path = require("path");
 const fs = require("fs");
 const Request = require("./models/Request");
 const Match = require("./models/Match");
+const Chat = require("./models/Chat");
 
 dns.setServers(["8.8.8.8", "8.8.4.4"]);
 
@@ -512,7 +513,74 @@ app.get("/received-requests/:phone", async (req, res) => {
   }
 
 });
-// ===================== GET PROFILE =====================
+
+// ===================== send message =====================//
+app.post("/send-message", async (req, res) => {
+
+  try {
+
+    const { senderPhone, receiverPhone, message } = req.body;
+
+    await Chat.create({
+      senderPhone,
+      receiverPhone,
+      message
+    });
+
+    res.json({
+      message: "Message Sent"
+    });
+
+  } catch (err) {
+
+    console.log(err);
+
+    res.status(500).json({
+      message: "Failed"
+    });
+
+  }
+
+});
+
+// ===================== GET message =====================//
+app.get("/messages/:user1/:user2", async (req, res) => {
+
+  try {
+
+    const chats = await Chat.find({
+
+      $or: [
+
+        {
+          senderPhone: req.params.user1,
+          receiverPhone: req.params.user2
+        },
+
+        {
+          senderPhone: req.params.user2,
+          receiverPhone: req.params.user1
+        }
+
+      ]
+
+    }).sort({ createdAt: 1 });
+
+    res.json(chats);
+
+  } catch (err) {
+
+    console.log(err);
+
+    res.status(500).json({
+      message: "Failed"
+    });
+
+  }
+
+});
+
+// ===================== GET PROFILE ===================== //
 app.get("/get-profile/:phone", async (req, res) => {
 
   try {
@@ -540,7 +608,7 @@ app.get("/get-profile/:phone", async (req, res) => {
   }
 
 });
-// ===================== GET HISTORY =====================
+// ===================== GET HISTORY =====================//
 app.get("/history/:phone", async (req, res) => {
 
   try {
@@ -562,7 +630,7 @@ app.get("/history/:phone", async (req, res) => {
   }
 
 });
-// ===================== FIND PARTNERS =====================
+// ===================== FIND PARTNERS =====================//
 
      app.get("/find-partners/:phone", async (req, res) => {
 
@@ -665,7 +733,7 @@ app.get("/history/:phone", async (req, res) => {
   }
 
 });
-// ===================== UPLOAD PROFILE PHOTO =====================
+// ===================== UPLOAD PROFILE PHOTO =====================//
 
 app.post("/upload-profile-photo", upload.single("photo"), (req, res) => {
 
@@ -681,7 +749,7 @@ app.post("/upload-profile-photo", upload.single("photo"), (req, res) => {
   });
 
 });
-// ===================== SERVER =====================
+// ===================== SERVER =====================//
 const PORT = process.env.PORT || 5000;
 app.get("/test-route", (req, res) => {
   res.send("TEST OK");
