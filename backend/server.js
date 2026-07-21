@@ -407,7 +407,23 @@ app.get("/received-requests/:phone", async (req, res) => {
       receiverPhone: req.params.phone
     });
 
-    res.json(requests);
+    const result = [];
+
+    for (const reqItem of requests) {
+
+      const senderProfile = await Profile.findOne({
+        userPhone: reqItem.senderPhone
+      });
+
+      result.push({
+        _id: reqItem._id,
+        status: reqItem.status,
+        sender: senderProfile
+      });
+
+    }
+
+    res.json(result);
 
   } catch (err) {
 
