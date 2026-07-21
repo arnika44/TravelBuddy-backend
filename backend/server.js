@@ -397,6 +397,66 @@ app.post("/send-request", async (req, res) => {
 
 });
 
+//==================== accept-request ====================//
+app.post("/accept-request", async (req, res) => {
+
+  try {
+
+    const { senderPhone, receiverPhone } = req.body;
+
+    await Request.findOneAndUpdate(
+      {
+        senderPhone,
+        receiverPhone
+      },
+      {
+        status: "Accepted"
+      }
+    );
+
+    res.json({
+      message: "Request Accepted"
+    });
+
+  } catch (err) {
+
+    console.log(err);
+
+    res.status(500).json({
+      message: "Accept failed"
+    });
+
+  }
+
+});
+
+//==================== reject-request ====================//
+app.post("/reject-request", async (req, res) => {
+
+  try {
+
+    const { senderPhone, receiverPhone } = req.body;
+
+    await Request.findOneAndDelete({
+      senderPhone,
+      receiverPhone
+    });
+
+    res.json({
+      message: "Request Rejected"
+    });
+
+  } catch (err) {
+
+    console.log(err);
+
+    res.status(500).json({
+      message: "Reject failed"
+    });
+
+  }
+
+});
 //==================== GET RECEIVED REQUESTS ====================//
 
 app.get("/received-requests/:phone", async (req, res) => {
