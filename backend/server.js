@@ -403,21 +403,58 @@ app.get("/history/:phone", async (req, res) => {
 
 });
 // ===================== FIND PARTNERS =====================
-app.get("/find-partners/:gender/:destination", async (req, res) => {
+app.get("/find-partners/:phone", async (req, res) => {
 
   try {
 
-    const { gender, destination } = req.params;
-    
-    const allProfiles = await Profile.find();
-    console.log("ALL PROFILES:", allProfiles);
-
-    const partners = await Profile.find({
-      preferredGender: gender,
-      destination: destination
+    const myProfile = await Profile.findOne({
+      userPhone: req.params.phone
     });
 
-    res.json(partners);
+    if (!myProfile) {
+      return res.status(404).json({
+        message: "Profile not found"
+      });
+    }
+
+    const partners = await Profile.find({
+      userPhone: { $ne: myProfile.userPhone }, // khud ko exclude
+      destination: myProfile.destination,
+      travelWith: "Solo"
+    });
+
+    const matchedPartners = partners.filter((p) => {
+
+      // Dono solo hone chahiye
+      if (myProfile.travelWith !== "Solo") return false;
+
+      // Mutual gender preference
+      const myChoice =
+        myProfile.preferredGender === "Any" ||
+        myProfile.preferredGender === p.gender;
+
+      const partnerChoice =
+        p.preferredGender === "Any" ||
+        p.preferredGender === myProfile.gender;
+
+      // Budget difference <= 5000
+      const budgetMatch =
+        Math.abs(myProfile.budget - p.budget) <= 5000;
+
+      // Days difference <= 2
+      const daysMatch =
+        Math.abs(myProfile.days - p.days) <= 2;
+
+      return (
+        myChoice &&
+        partnerChoice &&
+        budgetMatch &&
+        daysMatch
+      );
+
+    });
+
+    res.json(matchedPartners);
 
   } catch (err) {
 
