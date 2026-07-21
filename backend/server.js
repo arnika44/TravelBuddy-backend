@@ -7,6 +7,7 @@ const multer = require("multer");
 const path = require("path");
 const fs = require("fs");
 const Request = require("./models/Request");
+const Match = require("./models/Match");
 
 dns.setServers(["8.8.8.8", "8.8.4.4"]);
 
@@ -413,6 +414,21 @@ app.post("/accept-request", async (req, res) => {
         status: "Accepted"
       }
     );
+    const alreadyMatched = await Match.findOne({
+  $or: [
+    { user1: senderPhone, user2: receiverPhone },
+    { user1: receiverPhone, user2: senderPhone }
+  ]
+});
+
+if (!alreadyMatched) {
+
+  await Match.create({
+    user1: senderPhone,
+    user2: receiverPhone
+  });
+
+}
 
     res.json({
       message: "Request Accepted"
