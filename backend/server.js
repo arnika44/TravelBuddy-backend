@@ -238,6 +238,55 @@ app.post("/reset-password", async (req, res) => {
   }
 });
 
+// ===================== CHANGE PASSWORD =====================
+
+app.post("/change-password", async (req, res) => {
+
+  try {
+
+    const { phone, currentPassword, newPassword } = req.body;
+
+    const user = await User.findOne({ phone });
+
+    if (!user) {
+      return res.status(400).json({
+        message: "User not found"
+      });
+    }
+
+    const match = await bcrypt.compare(
+      currentPassword,
+      user.password
+    );
+
+    if (!match) {
+      return res.status(400).json({
+        message: "Current password is incorrect"
+      });
+    }
+
+    const hashed = await bcrypt.hash(newPassword, 10);
+
+    user.password = hashed;
+
+    await user.save();
+
+    res.json({
+      message: "Password changed successfully"
+    });
+
+  } catch (err) {
+
+    console.log(err);
+
+    res.status(500).json({
+      message: "Failed"
+    });
+
+  }
+
+});
+
 //====================Register====================//
 app.post("/register", async (req, res) => {
   try {
