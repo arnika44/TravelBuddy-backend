@@ -625,6 +625,51 @@ app.get("/chat-list/:phone", async (req, res) => {
 
 });
 
+// ===================== matched user ===================== //
+app.get("/matched-users/:phone", async (req, res) => {
+
+  try {
+
+    const matches = await Match.find({
+      $or: [
+        { user1: req.params.phone },
+        { user2: req.params.phone }
+      ]
+    });
+
+    const users = [];
+
+    for (const m of matches) {
+
+      const otherPhone =
+        m.user1 === req.params.phone ? m.user2 : m.user1;
+
+      const profile = await Profile.findOne({
+        userPhone: otherPhone
+      });
+
+      if (profile) {
+
+        users.push(profile);
+
+      }
+
+    }
+
+    res.json(users);
+
+  } catch (err) {
+
+    console.log(err);
+
+    res.status(500).json({
+      message: "Failed"
+    });
+
+  }
+
+});
+
 // ===================== GET PROFILE ===================== //
 app.get("/get-profile/:phone", async (req, res) => {
 
