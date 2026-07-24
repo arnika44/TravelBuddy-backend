@@ -9,6 +9,7 @@ const fs = require("fs");
 const Request = require("./models/Request");
 const Match = require("./models/Match");
 const Chat = require("./models/Chat");
+const Message = require("./models/Message");
 
 dns.setServers(["8.8.8.8", "8.8.4.4"]);
 
@@ -913,6 +914,76 @@ app.post("/upload-profile-photo", upload.single("photo"), (req, res) => {
   });
 
 });
+
+//==================== Send Message ====================//
+
+app.post("/send-message", async (req, res) => {
+
+  try {
+
+    const { senderPhone, receiverPhone, message } = req.body;
+
+    const msg = await Message.create({
+      senderPhone,
+      receiverPhone,
+      message
+    });
+
+    res.json(msg);
+
+  } catch (err) {
+
+    console.log(err);
+
+    res.status(500).json({
+      message: "Failed"
+    });
+
+  }
+
+});
+
+//==================== Get Messages ====================//
+app.get("/messages/:sender/:receiver", async (req, res) => {
+
+  try {
+
+    const { sender, receiver } = req.params;
+
+    const messages = await Message.find({
+
+      $or: [
+
+        {
+          senderPhone: sender,
+          receiverPhone: receiver
+        },
+
+        {
+          senderPhone: receiver,
+          receiverPhone: sender
+        }
+
+      ]
+
+    }).sort({
+      createdAt: 1
+    });
+
+    res.json(messages);
+
+  } catch (err) {
+
+    console.log(err);
+
+    res.status(500).json({
+      message: "Failed"
+    });
+
+  }
+
+});
+
 // ===================== SERVER =====================//
 const PORT = process.env.PORT || 5000;
 app.get("/test-route", (req, res) => {
