@@ -932,15 +932,13 @@ app.post("/send-message", async (req, res) => {
     res.json(msg);
 
   } catch (err) {
+  console.log(err);
 
-    console.log(err);
-
-    res.status(500).json({
-      message: "Failed"
-    });
-
-  }
-
+  res.status(500).json({
+    message: err.message,
+    error: err
+  });
+}
 });
 
 //==================== Get Messages ====================//
