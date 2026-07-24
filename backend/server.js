@@ -342,33 +342,58 @@ app.post("/register", async (req, res) => {
 
 //====================Login====================//
 app.post("/login", async (req, res) => {
-  try {
-    const { phone, password } = req.body;
 
-    const user = await User.findOne({ phone });
+  try {
+
+    const { email, password } = req.body;
+
+    const user = await User.findOne({ email });
 
     if (!user) {
-      return res.status(400).json({ message: "User not found" });
+
+      return res.status(400).json({
+        message: "User not found"
+      });
+
     }
 
-    const match = await bcrypt.compare(password, user.password);
+    const match = await bcrypt.compare(
+      password,
+      user.password
+    );
 
     if (!match) {
-      return res.status(400).json({ message: "Wrong Password" });
+
+      return res.status(400).json({
+        message: "Wrong Password"
+      });
+
     }
 
     res.json({
+
       message: "Login Success",
+
       user: {
+
         name: user.name,
-        phone: user.phone,
-        email: user.email
+        email: user.email,
+        phone: user.phone
+
       }
+
     });
 
   } catch (err) {
-    res.status(500).json({ message: "Login Failed" });
+
+    console.log(err);
+
+    res.status(500).json({
+      message: "Login Failed"
+    });
+
   }
+
 });
 
 //====================Save profile====================//
