@@ -216,9 +216,9 @@ app.post("/forgot-password-verify-otp", (req, res) => {
 // ===================== RESET PASSWORD =====================
 app.post("/reset-password", async (req, res) => {
   try {
-    const { phone, newPassword } = req.body;
+    const { email, newPassword } = req.body;
 
-    const user = await User.findOne({ phone });
+    const user = await User.findOne({ email });
 
     if (!user) {
       return res.status(400).json({ message: "User not found" });
